@@ -107,3 +107,27 @@ func TestUser_SetUsername(t *testing.T) {
 		})
 	}
 }
+
+// type mockUUID struct{}
+
+// func (u *mockUUID) V4() string {
+// 	return "test"
+// }
+// func TestGetUUID(t *testing.T) {
+// 	type args struct {
+// 		u uuid.UUIDGenerator
+// 	}
+// 	test := struct {
+// 		name string
+// 		args args
+// 		want interface{}
+// 	}{
+// 		name: "should return uuid",
+// 	}
+// 	t.Run(test.name, func(t *testing.T) {
+// 		got := GetUUID(&mockUUID{})
+// 		if diff := cmp.Diff("test", got); diff != "" {
+// 			t.Errorf("GetUUID() = %v", got)
+// 		}
+// 	})
+// }
