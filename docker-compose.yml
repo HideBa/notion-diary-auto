@@ -1,0 +1,35 @@
+  version: '3.7'
+
+  services:
+    db:
+      container_name: dation-db
+      image: postgres
+      volumes:
+        - ./pgdata:/pgdata
+      hostname: db
+      environment:
+        POSTGRES_DB: dation-db
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: password
+        PGDATA: /PGDATA
+      ports:
+        - 5432:5432
+      tty: true
+    app:
+      container_name: dation-api
+      build:
+        context: .
+        target: dev
+        args:
+          TAG: debug
+      environment:
+        DB_URL: postgres://user:password@db/dation-db
+        SERVER_PORT: 8080
+        SECRET_KEY: example
+      ports:
+        - 8080:8080
+      depends_on:
+        - db
+      links:
+        - db
+      tty: true
