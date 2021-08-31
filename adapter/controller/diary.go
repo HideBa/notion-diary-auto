@@ -25,3 +25,7 @@ func NewDiaryController(i *usecase.IDiary) *DiaryController {
 func (d *DiaryController) Create(c echo.Context) error {
 	return c.JSON(200, "helloo")
 }
+
+func (d *DiaryController) Fetch(c echo.Context) error {
+	return c.JSON(200, "fetch")
+}

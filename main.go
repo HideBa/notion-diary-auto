@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/HideBa/notion-diary-auto/app"
+)
 
-func Run() {
-	fmt.Println("start------")
+func main() {
+	app.RunApp(true)
 }

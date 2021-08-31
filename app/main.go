@@ -1,6 +1,6 @@
 package app
 
-func Run(debug bool) {
+func RunApp(debug bool) {
 	config := NewConfig()
 	port := config.app.Port
 	if port == 0 {

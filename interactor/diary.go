@@ -9,9 +9,9 @@ type Diary struct {
 	DiaryGateway gateway.Diary
 }
 
-func NewDiary(g gateway.Diary) usecase.IDiary {
+func NewDiary(g *gateway.Diary) usecase.IDiary {
 	return &Diary{
-		DiaryGateway: g,
+		DiaryGateway: *g,
 	}
 }
 
