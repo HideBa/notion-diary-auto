@@ -18,7 +18,7 @@ func NewEcho(config *Config) {
 
 	gw := notion.NewNotionDiary()
 	uc := interactor.NewDiary(&gw)
-	con := controller.NewController(&uc)
+	con := controller.NewController(uc)
 	apiV1 := e.Group("/api/v1")
 	router.Api(apiV1, con)
 

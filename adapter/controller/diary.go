@@ -13,19 +13,21 @@ type ResponseDiaryCreate struct {
 }
 
 type DiaryController struct {
-	interactor *usecase.IDiary
+	interactor usecase.IDiary
 }
 
-func NewDiaryController(i *usecase.IDiary) *DiaryController {
+func NewDiaryController(i usecase.IDiary) *DiaryController {
 	return &DiaryController{
 		interactor: i,
 	}
 }
 
-func (d *DiaryController) Create(c echo.Context) error {
+func (dc *DiaryController) Create(c echo.Context) error {
+	var r usecase.CreateDiaryRequest
+	dc.interactor.Create(&r)
 	return c.JSON(200, "helloo")
 }
 
-func (d *DiaryController) Fetch(c echo.Context) error {
+func (dc *DiaryController) Fetch(c echo.Context) error {
 	return c.JSON(200, "fetch")
 }

@@ -6,7 +6,7 @@ type Controller struct {
 	DiaryController *DiaryController
 }
 
-func NewController(i *usecase.IDiary) *Controller {
+func NewController(i usecase.IDiary) *Controller {
 	return &Controller{
 		DiaryController: NewDiaryController(i),
 	}
