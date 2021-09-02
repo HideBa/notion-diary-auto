@@ -14,7 +14,7 @@ func NewEcho(config *Config) {
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
 
-	gw := notion.NewNotionDiary()
+	gw := notion.NewNotionDiary(&config.Notion)
 	uc := interactor.NewDiary(&gw)
 	con := controller.NewController(uc)
 	apiV1 := e.Group("/api/v1")

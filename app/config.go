@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -11,26 +12,20 @@ import (
 type Config struct {
 	DB        DBConfig
 	App       AppConfig
-	Notion    NotionConfig
-	DebugMode DebugMode `default:"true"`
+	Notion    notion.NotionConfig
+	DebugMode bool
 }
 type DBConfig struct {
-	DBName string
-	DBUser string
-	DBUrl  string `envconfig:"DB_URL"`
-	DBPass string
+	Name string
+	User string
+	Url  string `envconfig:"DB_URL"`
+	Pass string
 }
 
 type AppConfig struct {
-	Port   string
+	Port   string `envconfig:"PORT"`
 	Secret string
 }
-
-type NotionConfig struct {
-	BASE_URL string `envconfig:"NOTION_BASE_URL`
-}
-
-type DebugMode bool
 
 func NewConfig() (*Config, error) {
 	err := godotenv.Load(".env")
@@ -45,17 +40,21 @@ func NewConfig() (*Config, error) {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	dationEnv := os.Getenv("DATION_ENV")
+	if dationEnv != "production" {
+		c.DebugMode = true
+	}
 	return &c, nil
 }
 
-func NewDBConfig() DBConfig {
-	return DBConfig{
-		DBName: "hoge",
-		DBUser: "hoge",
-		DBUrl:  "hoge",
-		DBPass: "hoge",
-	}
-}
+// func NewDBConfig() DBConfig {
+// 	return DBConfig{
+// 		DBName: "hoge",
+// 		DBUser: "hoge",
+// 		DBUrl:  "hoge",
+// 		DBPass: "hoge",
+// 	}
+// }
 
 func NewAppConfig() AppConfig {
 	return AppConfig{
@@ -64,6 +63,6 @@ func NewAppConfig() AppConfig {
 	}
 }
 
-func NewDebugMode() DebugMode {
-	return true
-}
+// func NewDebugMode() DebugMode {
+// 	return true
+// }

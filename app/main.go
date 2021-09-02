@@ -7,7 +7,7 @@ func RunApp(debug bool) {
 	}
 	port := config.App.Port
 	if port == "" {
-		port = "8000"
+		config.App.Port = "8000"
 	}
 	NewEcho(config)
 }
