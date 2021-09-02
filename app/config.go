@@ -1,50 +1,51 @@
 package app
 
 import (
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
-	db        DBConfig
-	app       AppConfig
-	debugMode DebugMode
-}
-
-type SampleConfig struct {
-	port string
-	db   string
+	DB        DBConfig
+	App       AppConfig
+	Notion    NotionConfig
+	DebugMode DebugMode `default:"true"`
 }
 type DBConfig struct {
 	DBName string
 	DBUser string
-	DBUrl  string
+	DBUrl  string `envconfig:"DB_URL"`
 	DBPass string
 }
 
 type AppConfig struct {
-	Port   int
+	Port   string
 	Secret string
+}
+
+type NotionConfig struct {
+	BASE_URL string `envconfig:"NOTION_BASE_URL`
 }
 
 type DebugMode bool
 
-func NewConfig() *Config {
-	err := godotenv.Load()
+func NewConfig() (*Config, error) {
+	err := godotenv.Load(".env")
+	if err != nil && !os.IsNotExist(err) {
+		log.Fatal("failure to load env")
+		return nil, err
+	} else if err == nil {
+		log.Print("config: .env loaded")
+	}
+	var c Config
+	err = envconfig.Process("dation", &c)
 	if err != nil {
-		log.Fatal("Error: Failure to load .env file")
+		log.Fatal(err.Error())
 	}
-	var c SampleConfig
-	err = envconfig.Process("daytion", &c)
-	fmt.Printf("env--------- %v", c)
-	return &Config{
-		db:        NewDBConfig(),
-		app:       NewAppConfig(),
-		debugMode: NewDebugMode(),
-	}
+	return &c, nil
 }
 
 func NewDBConfig() DBConfig {
@@ -58,7 +59,7 @@ func NewDBConfig() DBConfig {
 
 func NewAppConfig() AppConfig {
 	return AppConfig{
-		Port:   8080,
+		Port:   "8080",
 		Secret: "secret",
 	}
 }

@@ -1,8 +1,6 @@
 package app
 
 import (
-	"strconv"
-
 	"github.com/HideBa/notion-diary-auto/adapter/controller"
 	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
 	"github.com/HideBa/notion-diary-auto/infrastructure/router"
@@ -22,7 +20,7 @@ func NewEcho(config *Config) {
 	apiV1 := e.Group("/api/v1")
 	router.Api(apiV1, con)
 
-	if config.debugMode == true {
+	if config.DebugMode == true {
 		e.Logger.SetLevel(log.ERROR)
 	}
 
@@ -34,5 +32,5 @@ func NewEcho(config *Config) {
 		AllowHeaders: []string{"*"},
 	}))
 
-	e.Logger.Fatal(e.Start(":" + strconv.Itoa(config.app.Port)))
+	e.Logger.Fatal(e.Start(":" + (config.App.Port)))
 }
