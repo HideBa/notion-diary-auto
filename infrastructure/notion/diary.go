@@ -27,11 +27,11 @@ func (n *NotionDiary) AutoGenerate(d *domain.Diary) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/pages", n.config.BaseUrl), bytes.NewBuffer(jsonBytes))
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.config.Secret))
 	req.Header.Set("Notion-Version", n.config.Version)
 	client := new(http.Client)
+	fmt.Print("-----req----", req.Body)
 	res, err := client.Do(req)
 	if err != nil {
 		log.Print(err.Error())
@@ -42,4 +42,33 @@ func (n *NotionDiary) AutoGenerate(d *domain.Diary) string {
 	// ここでNotionにリクエストをなげていく
 	fmt.Print("auto generate-------")
 	return "hoge"
+}
+
+type NotionRequest struct {
+	parent     NotionParent     `json:"parent"`
+	properties []NotionProperty `json:"properties"`
+	children   []NotionBlock    `json:"children"`
+}
+
+type NotionParent struct {
+	parent struct {
+		databaseId string `json:"database_id"`
+	}
+}
+
+type NotionProperty struct {
+	name struct {
+		title []struct {
+			text struct {
+				content fmt.Stringer
+			} `json:"text"`
+		} `json:"title"`
+	} `json:"Name"`
+}
+
+type NotionChildren []NotionBlock
+
+type NotionBlock struct {
+	object    string `json:"object"`
+	blockType string `json:"type"`
 }
