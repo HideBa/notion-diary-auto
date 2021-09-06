@@ -1,6 +1,7 @@
 package notion
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -22,7 +23,12 @@ func NewNotionDiary(c *NotionConfig) gateway.Diary {
 }
 
 func (n *NotionDiary) AutoGenerate(d *domain.Diary) string {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/users", n.config.BaseUrl), nil)
+	jsonBytes, err := ioutil.ReadFile("infrastructure/notion/body.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/pages", n.config.BaseUrl), bytes.NewBuffer(jsonBytes))
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.config.Secret))
 	req.Header.Set("Notion-Version", n.config.Version)
 	client := new(http.Client)
