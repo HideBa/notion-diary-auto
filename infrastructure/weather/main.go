@@ -30,20 +30,17 @@ func NewYahooWeather(c *YahooWeatherConfig) gateway.Weather {
 	}
 }
 
-func (y *YahooWeather) TodaysWeather(d time.Time, l domain.Location) (*domain.Weather, error) {
-	exampleLocation, err := domain.NewLocation(exampleLat, exampleLng)
-	if err != nil {
-		return nil, err
-	}
+func (y *YahooWeather) TodaysWeather(t time.Time, l domain.Location) (*domain.Weather, error) {
+	formattedDate := t.Format("20060102030405")
+	fmt.Print("--------", formattedDate)
 	req, err := http.NewRequest("GET", y.config.BaseUrl, nil)
 	params := req.URL.Query()
 	params.Add("appid", y.config.ClientId)
-	params.Add("coordinates", fmt.Sprintf("%s,%s", strconv.FormatFloat(exampleLocation.Lat, 'f', -1, 64), strconv.FormatFloat(exampleLocation.Lng, 'f', -1, 64)))
-	fmt.Print("---------", params.Get("coordinates"))
 	params.Add("output", expectedResponseFormat)
-	// メモ：URLエンコードされるときに,までエンコードされてうまく行ってない疑惑
+	params.Add("date", formattedDate)
+	params.Add("past", "2")
+	params.Add("coordinates", fmt.Sprintf("%s,%s", strconv.FormatFloat(l.Lat, 'f', -1, 64), strconv.FormatFloat(l.Lng, 'f', -1, 64)))
 	req.URL.RawQuery = params.Encode()
-	fmt.Print("-------", req.URL.String())
 	client := new(http.Client)
 	res, err := client.Do(req)
 	if err != nil {
@@ -51,7 +48,7 @@ func (y *YahooWeather) TodaysWeather(d time.Time, l domain.Location) (*domain.We
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	fmt.Print("body-----", string(body))
+	fmt.Print("------", string(body))
 	return nil, nil
 }
 
