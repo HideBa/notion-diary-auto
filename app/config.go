@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
+	"github.com/HideBa/notion-diary-auto/infrastructure/weather"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -13,6 +14,7 @@ type Config struct {
 	DB        DBConfig
 	App       AppConfig
 	Notion    notion.NotionConfig
+	Yahoo     weather.YahooWeatherConfig
 	DebugMode bool
 }
 type DBConfig struct {
@@ -47,22 +49,9 @@ func NewConfig() (*Config, error) {
 	return &c, nil
 }
 
-// func NewDBConfig() DBConfig {
-// 	return DBConfig{
-// 		DBName: "hoge",
-// 		DBUser: "hoge",
-// 		DBUrl:  "hoge",
-// 		DBPass: "hoge",
-// 	}
-// }
-
 func NewAppConfig() AppConfig {
 	return AppConfig{
 		Port:   "8080",
 		Secret: "secret",
 	}
 }
-
-// func NewDebugMode() DebugMode {
-// 	return true
-// }

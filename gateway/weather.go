@@ -1,10 +1,11 @@
 package gateway
 
 import (
+	"time"
+
 	"github.com/HideBa/notion-diary-auto/domain"
-	"google.golang.org/genproto/googleapis/type/date"
 )
 
 type Weather interface {
-	TodaysWeather(date.Date) *domain.Weather
+	TodaysWeather(time.Time, domain.Location) (*domain.Weather, error)
 }
