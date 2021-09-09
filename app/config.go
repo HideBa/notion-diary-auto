@@ -14,7 +14,7 @@ type Config struct {
 	DB        DBConfig
 	App       AppConfig
 	Notion    notion.NotionConfig
-	Yahoo     weather.YahooWeatherConfig
+	Weather   weather.WeatherConfig
 	DebugMode bool
 }
 type DBConfig struct {
