@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/HideBa/notion-diary-auto/infrastructure/news"
 	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
 	"github.com/HideBa/notion-diary-auto/infrastructure/weather"
 	"github.com/joho/godotenv"
@@ -15,6 +16,7 @@ type Config struct {
 	App       AppConfig
 	Notion    notion.NotionConfig
 	Weather   weather.WeatherConfig
+	News      news.NewsConfig
 	DebugMode bool
 }
 type DBConfig struct {

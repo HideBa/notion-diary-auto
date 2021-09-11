@@ -1,10 +1,11 @@
 package gateway
 
 import (
+	"time"
+
 	"github.com/HideBa/notion-diary-auto/domain"
-	"google.golang.org/genproto/googleapis/type/date"
 )
 
 type News interface {
-	TodaysNews(date.Date) []domain.News
+	TodaysNews(time.Time) ([]domain.News, error)
 }

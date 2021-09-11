@@ -1,18 +1,33 @@
 package domain
 
-import "google.golang.org/genproto/googleapis/type/datetime"
+import (
+	"time"
+)
 
 type News struct {
 	name     string
+	text     string
+	category Category
 	url      string
-	datetime datetime.DateTime
+	time     time.Time
 }
 
-func NewNews(n string, u string, d *datetime.DateTime) *News {
+type Category string
+
+const (
+	BUSINESS      = "business"
+	ENTERTAINMENT = "entertainment"
+	HEALTH        = "health"
+	SCIENTCE      = "scient"
+	TECHNOLOGY    = "technology"
+	SPORTS        = "sports"
+)
+
+func NewNews(n string, u string, t *time.Time) *News {
 	return &News{
-		name:     n,
-		url:      u,
-		datetime: *d,
+		name: n,
+		url:  u,
+		time: *t,
 	}
 }
 
@@ -24,6 +39,6 @@ func (n *News) Url() string {
 	return n.url
 }
 
-func (n *News) Datetime() datetime.DateTime {
-	return n.datetime
+func (n *News) Datetime() time.Time {
+	return n.time
 }
