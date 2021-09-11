@@ -29,7 +29,6 @@ func NewWeather(c *WeatherConfig) gateway.Weather {
 }
 
 func (w *Weather) TodaysWeather(t time.Time, l domain.Location) (*domain.Weather, error) {
-	// call this URL https://weather.tsukumijima.net/
 	req, err := http.NewRequest("GET", w.config.EndPoint, nil)
 	params := req.URL.Query()
 	params.Add("city", "130010")

@@ -3,6 +3,7 @@ module github.com/HideBa/notion-diary-auto
 go 1.16
 
 require (
+	firebase.google.com/go/v4 v4.6.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
