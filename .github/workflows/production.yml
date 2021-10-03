@@ -8,7 +8,7 @@ on:
 env:
   GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
-  IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/dation/dation-api:${{ github.sha }}
+  IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/dation/dation-api:production
   # IMAGE_NAME: us.gcr.io/${{ secrets.GCP_PROJ_ID }}/dation:${{ github.sha }}
 
 jobs:
@@ -30,9 +30,12 @@ jobs:
     - name: docker build
       run: |
         docker build -t $IMAGE_NAME .
+    - name: docker tag
+      run: |
+        docker tag $IMAGE_NAME $IMAGE_NAME:${{ github.sha }}
     - name: docker push
       run: |
-        docker push $IMAGE_NAME
+        docker push $IMAGE_NAME:${{ github.sha }}
     - name: Deploy
       run: |-
         gcloud run deploy dation \
