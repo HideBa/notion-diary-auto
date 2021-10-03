@@ -8,7 +8,7 @@ on:
 env:
   GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
-  IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/dation/dation-api:production
+  IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/dation/dation-api
   # IMAGE_NAME: us.gcr.io/${{ secrets.GCP_PROJ_ID }}/dation:${{ github.sha }}
 
 jobs:
