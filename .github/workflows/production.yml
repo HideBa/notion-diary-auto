@@ -8,8 +8,8 @@ on:
 env:
   GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
-  IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/dation/dation-api
-  # IMAGE_NAME: us.gcr.io/${{ secrets.GCP_PROJ_ID }}/dation:${{ github.sha }}
+  # IMAGE_NAME: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/dation/dation-api
+  IMAGE_NAME: us.gcr.io/${{ secrets.GCP_PROJECT_ID }}/dation:${{ github.sha }}
 
 jobs:
   build:
@@ -26,16 +26,13 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         export_default_credentials: true
     - name: Configure docker
-      run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+      run: gcloud auth configure-docker --quiet
     - name: docker build
       run: |
         docker build -t $IMAGE_NAME .
-    - name: docker tag
-      run: |
-        docker tag $IMAGE_NAME $IMAGE_NAME:${{ github.sha }}
     - name: docker push
       run: |
-        docker push $IMAGE_NAME:${{ github.sha }}
+        docker push $IMAGE_NAME
     - name: Deploy
       run: |-
         gcloud run deploy dation \
