@@ -16,15 +16,15 @@ RUN go mod download
 
 COPY . .
 
-RUN GOOS=linux GOARCH=amd64 go build -o app main.go
+RUN GOOS=linux go build -o app main.go
 
-FROM alpine:3.14.3
+FROM scratch
 
 WORKDIR /app
 
-RUN apk update --no-cache \
-  && apk add --no-cache ca-certificates
-RUN update-ca-certificates
+# RUN apk update --no-cache \
+#   && apk add --no-cache ca-certificates
+# RUN update-ca-certificates
 
 COPY --from=build /app/app .
 
