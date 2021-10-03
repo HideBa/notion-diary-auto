@@ -28,15 +28,15 @@ jobs:
       run: gcloud auth configure-docker --quiet
     - name: docker build
       run: |
-        docker build -t ${IMAGE_NAME} .
+        docker build -t $IMAGE_NAME .
     - name: docker push
       run: |
-        docker push ${IMAGE_NAME}
+        docker push $IMAGE_NAME
     - name: Deploy
       run: |-
         gcloud run deploy dation \
           --quiet \
           --region $GCP_REGION \
           --project $GCP_PROJECT \
-          --image ${IMAGE_NAME} \
+          --image $IMAGE_NAME \
           --platform managed \
