@@ -87,7 +87,12 @@ func (c *Calendar) TodaysCalendar(today time.Time) []domain.Calendar {
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}
-
+	conf := &oauth2.Config{
+		ClientID:     "hoge",
+		ClientSecret: "hoge",
+		Endpoint:     google.Endpoint,
+		Scopes:       []string{calendar.CalendarReadonlyScope},
+	}
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
 	if err != nil {
