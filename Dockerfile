@@ -18,7 +18,7 @@ COPY . .
 
 RUN GOOS=linux go build -o app main.go
 
-FROM scratch
+FROM scratch as prod
 
 WORKDIR /app
 
