@@ -24,7 +24,8 @@ CMD ["/go/src/app/binary"]
 
 FROM golang:1.16-alpine as dev
 
-WORKDIR /app
+ENV ROOT=/go/src/app
+WORKDIR ${ROOT}}
 
 RUN apk update && apk add git
 COPY go.mod go.sum ./
