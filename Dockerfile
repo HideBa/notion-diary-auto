@@ -28,7 +28,7 @@ WORKDIR /app
 
 COPY --from=build /app/app .
 
-CMD ["./app/main"]
+CMD ["./main"]
 
 # ---------for development--------------
 
