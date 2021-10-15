@@ -1,34 +1,24 @@
-FROM golang:1.16-alpine as build
-ARG TAG=production
+FROM golang:1.16-alpine as builder
 
-WORKDIR /app
+ENV ROOT=/go/src/app
+WORKDIR ${ROOT}
 
-RUN apk update --no-cache \
-  && apk add --no-cache \
-    git \
-    gcc \
-    musl-dev
-
-COPY go.mod .
-COPY go.sum .
-
+RUN apk update && apk add git
+COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . .
+COPY . ${ROOT}
+RUN CGO_ENABLED=0 GOOS=linux go build -o $ROOT/binary
 
-RUN GOOS=linux go build -o app main.go
 
 FROM scratch as prod
 
-WORKDIR /app
+ENV ROOT=/go/src/app
+WORKDIR ${ROOT}
+COPY --from=builder ${ROOT}/binary ${ROOT}
 
-# RUN apk update --no-cache \
-#   && apk add --no-cache ca-certificates
-# RUN update-ca-certificates
-
-COPY --from=build /app/app .
-
-CMD ["./main"]
+EXPOSE 8080
+CMD ["/go/src/app/binary"]
 
 # ---------for development--------------
 
