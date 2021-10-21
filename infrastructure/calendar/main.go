@@ -3,9 +3,10 @@ package calendar
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"time"
@@ -19,7 +20,11 @@ import (
 )
 
 type GoogleCalendarConfig struct {
-	ApiKey string `envconfig:"API_KEY"`
+	ClientID     string `envconfig:"CLIENT_ID"`
+	ClientSecret string `envconfig:"CLIENT_SECRET"`
+	Endpoint     oauth2.Endpoint
+	RedirectURL  string
+	Scopes       []string
 }
 
 type Calendar struct {
@@ -27,9 +32,29 @@ type Calendar struct {
 }
 
 func NewCalendar(c *GoogleCalendarConfig) gateway.Calendar {
+	err := NewConfig(c)
+	if err != nil {
+		log.Fatal("ERR: fail to init calendar gateway")
+		return nil
+	}
 	return &Calendar{
 		config: c,
 	}
+}
+
+func NewConfig(c *GoogleCalendarConfig) error {
+	if c.ClientID == "" || c.ClientSecret == "" {
+		log.Fatal("ERR: necessary client info is missing")
+		return errors.New("ERR: client info is missing")
+	}
+	c.Endpoint = google.Endpoint
+	if c.RedirectURL == "" {
+		c.RedirectURL = fmt.Sprintf("%v/callback", "localhost:8000/api/v1")
+	}
+	if len(c.Scopes) == 0 {
+		c.Scopes = []string{calendar.CalendarReadonlyScope}
+	}
+	return nil
 }
 
 func getClient(config *oauth2.Config) *http.Client {
@@ -83,22 +108,7 @@ func saveToken(path string, token *oauth2.Token) {
 
 func (c *Calendar) TodaysCalendar(today time.Time) []domain.Calendar {
 	ctx := context.Background()
-	b, err := ioutil.ReadFile("credentials.json")
-	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
-	}
-	conf := &oauth2.Config{
-		ClientID:     "hoge",
-		ClientSecret: "hoge",
-		Endpoint:     google.Endpoint,
-		Scopes:       []string{calendar.CalendarReadonlyScope},
-	}
-	// If modifying these scopes, delete your previously saved token.json.
-	config, err := google.ConfigFromJSON(b, calendar.CalendarReadonlyScope)
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
-	}
-	client := getClient(config)
+	client := getClient((*oauth2.Config)(c.config))
 
 	srv, err := calendar.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
@@ -124,4 +134,19 @@ func (c *Calendar) TodaysCalendar(today time.Time) []domain.Calendar {
 		}
 	}
 	return nil
+}
+
+func generateState() string {
+	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	randStr := generateRandomStr(letters, 100)
+	return randStr
+}
+
+func generateRandomStr(letters []rune, n int) string {
+	rand.Seed(time.Now().UnixNano())
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }

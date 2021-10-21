@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/HideBa/notion-diary-auto/infrastructure/calendar"
 	"github.com/HideBa/notion-diary-auto/infrastructure/news"
 	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
 	"github.com/HideBa/notion-diary-auto/infrastructure/weather"
@@ -17,6 +18,7 @@ type Config struct {
 	Notion    notion.NotionConfig
 	Weather   weather.WeatherConfig
 	News      news.NewsConfig
+	Calendar  calendar.GoogleCalendarConfig `envconfig:"GOOGLE"`
 	DebugMode bool
 }
 type DBConfig struct {
