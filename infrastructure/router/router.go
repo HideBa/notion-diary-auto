@@ -11,4 +11,6 @@ func Api(r *echo.Group, c *controller.Controller) {
 	})
 	r.GET("/diaries", c.DiaryController.Fetch)
 	r.POST("/diaries", c.DiaryController.Create)
+	r.GET("/notion", c.DiaryController.ConnectNotion)
+	r.GET("/notion/callback", c.DiaryController.CallbackNotion)
 }
