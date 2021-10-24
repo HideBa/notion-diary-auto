@@ -15,7 +15,7 @@ import (
 type Config struct {
 	DB        DBConfig
 	App       AppConfig
-	Notion    notion.NotionConfig
+	Notion    notion.NotionRawConfig
 	Weather   weather.WeatherConfig
 	News      news.NewsConfig
 	Calendar  calendar.GoogleCalendarConfig `envconfig:"GOOGLE"`

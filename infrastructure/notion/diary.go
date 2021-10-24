@@ -3,31 +3,27 @@ package notion
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/HideBa/notion-diary-auto/domain"
 	"golang.org/x/oauth2"
 )
 
-type NotionInternal struct{}
-
-func (n *NotionDiary) AutoGenerate(d *domain.Diary) string {
-	token := getToken()
-	if token == nil {
-
-	}
+func (n *Notion) PostDiary(d *domain.Diary) string {
+	client := getClient(&n.config.OAuth)
 	jsonBytes, err := ioutil.ReadFile("infrastructure/notion/body.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/pages", n.config.BaseUrl), bytes.NewBuffer(jsonBytes))
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.config.Secret))
-	req.Header.Set("Notion-Version", n.config.Version)
-	client := new(http.Client)
-	fmt.Print("-----req----", req.Body)
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/pages", n.config.Base.BaseUrl), bytes.NewBuffer(jsonBytes))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", n.config.Base.Secret))
+	req.Header.Set("Notion-Version", n.config.Base.Version)
+	// client := new(http.Client)
 	res, err := client.Do(req)
 	if err != nil {
 		log.Print(err.Error())
@@ -36,20 +32,55 @@ func (n *NotionDiary) AutoGenerate(d *domain.Diary) string {
 	byteArray, err := ioutil.ReadAll(res.Body)
 	fmt.Println(string(byteArray))
 	// ここでNotionにリクエストをなげていく
-	fmt.Print("auto generate-------")
 	return "hoge"
 }
 
-func getToken() {
-
+func getClient(config *oauth2.Config) *http.Client {
+	tokFile := "token.json"
+	tok, err := tokenFromFile(tokFile)
+	if err != nil {
+		panic("ERR: no token") //FIXME: change here
+	}
+	return config.Client(context.Background(), tok)
 }
 
-func handleCallback() {
+func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
+	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
+	fmt.Printf("Go to the following link in your browser then type the "+
+		"authorization code: \n%v\n", authURL)
 
+	var authCode string //TODO: change here for production use
+	if _, err := fmt.Scan(&authCode); err != nil {
+		log.Fatalf("Unable to read authorization code: %v", err)
+	}
+	tok, err := config.Exchange(context.TODO(), authCode)
+	if err != nil {
+		log.Fatalf("Unable to retrive token from web: %v", err)
+	}
+	return tok
 }
 
-func storeToken() {
+// Retrieves a token from a local file.
+func tokenFromFile(file string) (*oauth2.Token, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	tok := &oauth2.Token{}
+	err = json.NewDecoder(f).Decode(tok)
+	return tok, err
+}
 
+// Saves a token to a file path.
+func saveToken(path string, token *oauth2.Token) {
+	fmt.Printf("Saving credential file to: %s\n", path)
+	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
+	if err != nil {
+		log.Fatalf("Unable to cache oauth token: %v", err)
+	}
+	defer f.Close()
+	json.NewEncoder(f).Encode(token)
 }
 
 type NotionRequest struct {
@@ -79,60 +110,4 @@ type NotionChildren []NotionBlock
 type NotionBlock struct {
 	object    string `json:"object"`
 	blockType string `json:"type"`
-}
-
-func (n *NotionDiary) CreateWithOAuth(diary domain.Diary) error {
-	return nil
-}
-
-func (n *NotionDiary) Connect(w http.ResponseWriter, r *http.Request) error {
-	ctx := context.Background()
-	conf := &oauth2.Config{
-		RedirectURL:  "http://localhost:8080/api/v1/notion/callback",
-		ClientID:     n.config.ClientID,
-		ClientSecret: n.config.ClientSecret,
-		Scopes:       []string{},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  fmt.Sprintf("%v/authorize", n.config.Endpoint),
-			TokenURL: fmt.Sprintf("%v/token", n.config.Endpoint),
-		},
-	}
-	url := conf.AuthCodeURL("state")
-
-	return nil
-
-}
-
-func Callback() error {
-	return nil
-}
-
-
-type  PersonalConn interface{
-	Config() interface{}
-}
-
-func (p *PersonalConn) AutoGenerate(d *domain.Diary){
-
-}
-
-func (p *PersonalConn) Conn() {
-
-}
-
-type NoTokenErr struct {
-	integrationUrl string
-}
-
-func NewPersonalConn(c *NotionConfig)(*PersonalConn, *NoTokenErr) {
-	token := GetToken()
-	if !token {
-		// 連携する
-		return nil, &{
-			連携先URL: hogehoge
-		}
-	}
-	return &PersonalConn{
-		accessToken: token
-	}
 }

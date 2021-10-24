@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
+	"fmt"
+
 	"github.com/HideBa/notion-diary-auto/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -34,13 +35,7 @@ func (dc *DiaryController) Fetch(c echo.Context) error {
 }
 
 func (dc *DiaryController) ConnectNotion(c echo.Context) error {
-	var r struct{}
-	dc.interactor.ConnectNotion(&r)
+	err := dc.interactor.Connect()
+	fmt.Print(err)
 	return c.JSON(200, "notion")
-}
-
-func (dc *DiaryController) CallbackNotion(c echo.Context) error {
-	// var r struct{}
-	notion.Callback()
-	return nil
 }
