@@ -1,8 +1,6 @@
 package interactor
 
 import (
-	"fmt"
-
 	"github.com/HideBa/notion-diary-auto/domain"
 	"github.com/HideBa/notion-diary-auto/gateway"
 	"github.com/HideBa/notion-diary-auto/usecase"
@@ -35,10 +33,4 @@ func (d *Diary) Create(req *usecase.CreateDiaryRequest) (*usecase.CreateDiaryRes
 	return &usecase.CreateDiaryResponse{
 		Id: "hoge",
 	}, nil
-}
-
-func (d *Diary) Connect() error {
-	err := d.DiaryGateway.Connect()
-	fmt.Print(err)
-	return nil
 }

@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/HideBa/notion-diary-auto/usecase"
 	"github.com/labstack/echo/v4"
 )
@@ -32,10 +30,4 @@ func (dc *DiaryController) Create(c echo.Context) error {
 
 func (dc *DiaryController) Fetch(c echo.Context) error {
 	return c.JSON(200, "fetch")
-}
-
-func (dc *DiaryController) ConnectNotion(c echo.Context) error {
-	err := dc.interactor.Connect()
-	fmt.Print(err)
-	return c.JSON(200, "notion")
 }

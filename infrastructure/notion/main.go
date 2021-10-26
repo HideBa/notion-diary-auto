@@ -1,7 +1,6 @@
 package notion
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/HideBa/notion-diary-auto/domain"
@@ -58,10 +57,6 @@ func NewNotionConfig(r *NotionRawConfig) *NotionConfig {
 	}
 }
 
-type PersonalNotionConfig struct {
-	accessToken string
-}
-
 func NewNotionDiary(r *NotionRawConfig) gateway.Diary {
 	return &Notion{
 		config: NewNotionConfig(r),
@@ -71,12 +66,4 @@ func NewNotionDiary(r *NotionRawConfig) gateway.Diary {
 func (n *Notion) Create(diary *domain.Diary) (id string) {
 	n.PostDiary(diary)
 	return "hoge"
-}
-
-func (n *Notion) Connect() error {
-	tok := getTokenFromWeb(&n.config.OAuth)
-	if tok == nil {
-		return errors.New("No token!")
-	}
-	return nil
 }

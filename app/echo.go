@@ -22,9 +22,10 @@ func NewEcho(config *Config) {
 	nsgw := news.NewNews(&config.News)
 	cgw := calendar.NewCalendar(&config.Calendar)
 	uc := interactor.NewDiary(&ngw, &wgw, &nsgw, &cgw)
-	con := controller.NewController(uc)
+	internalCon := controller.NewInternalController(uc)
+	outerCon := controller.NewOuterController((*controller.NotionRawConfig)(&config.Notion))
 	apiV1 := e.Group("/api/v1")
-	router.Api(apiV1, con)
+	router.Api(apiV1, internalCon, outerCon)
 
 	if config.DebugMode == true {
 		e.Logger.SetLevel(log.ERROR)
@@ -36,6 +37,7 @@ func NewEcho(config *Config) {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{"*"},
+		AllowMethods: []string{"GET", "POST", "OPTIONS"},
 	}))
 
 	e.Logger.Fatal(e.Start(":" + (config.App.Port)))
