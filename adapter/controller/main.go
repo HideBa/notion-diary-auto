@@ -1,18 +1,22 @@
 package controller
 
-import "github.com/HideBa/notion-diary-auto/usecase"
+import (
+	"github.com/HideBa/notion-diary-auto/interactor"
+)
 
 type Controller struct {
 	DiaryController *DiaryController
+	UserController  *UserController
 }
 
 type OuterController struct {
 	OAuth *OAuthController
 }
 
-func NewInternalController(i usecase.IDiary) *Controller {
+func NewInternalController(i *interactor.Interactor) *Controller {
 	return &Controller{
-		DiaryController: NewDiaryController(i),
+		DiaryController: NewDiaryController(i.Diary),
+		UserController:  NewUserController(i.User),
 	}
 }
 

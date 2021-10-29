@@ -9,6 +9,10 @@ type User struct {
 
 func NewUser(username string) *User {
 	id := uuid.GetUUID()
+	return NewUserWithId(id, username)
+}
+
+func NewUserWithId(id string, username string) *User {
 	return &User{
 		id:       id,
 		username: username,

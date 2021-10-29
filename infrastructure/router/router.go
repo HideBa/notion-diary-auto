@@ -16,4 +16,8 @@ func Api(r *echo.Group, c *controller.Controller, oc *controller.OuterController
 	r.POST("/diaries", c.DiaryController.Create)
 	r.POST("/notion/authorize", oc.OAuth.Notion.GetAuthCode)
 	r.GET("/notion/callback", oc.OAuth.Notion.GetToken)
+
+	// ***User***
+	ug := r.Group("users")
+	ug.GET("/", c.UserController.FetchAll)
 }

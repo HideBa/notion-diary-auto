@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/HideBa/notion-diary-auto/adapter/controller"
 	"github.com/HideBa/notion-diary-auto/infrastructure/calendar"
+	"github.com/HideBa/notion-diary-auto/infrastructure/database"
 	"github.com/HideBa/notion-diary-auto/infrastructure/news"
 	"github.com/HideBa/notion-diary-auto/infrastructure/notion"
 	"github.com/HideBa/notion-diary-auto/infrastructure/router"
@@ -21,7 +22,8 @@ func NewEcho(config *Config) {
 	wgw := weather.NewWeather(&config.Weather)
 	nsgw := news.NewNews(&config.News)
 	cgw := calendar.NewCalendar(&config.Calendar)
-	uc := interactor.NewDiary(&ngw, &wgw, &nsgw, &cgw)
+	repo := database.NewRepository(database.NewDB(config.DB.Url))
+	uc := interactor.NewInteractor(&ngw, &wgw, &nsgw, &cgw, &repo.User)
 	internalCon := controller.NewInternalController(uc)
 	outerCon := controller.NewOuterController((*controller.NotionRawConfig)(&config.Notion))
 	apiV1 := e.Group("/api/v1")
