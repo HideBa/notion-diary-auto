@@ -1,32 +1,32 @@
 package domain
 
-import "github.com/HideBa/notion-diary-auto/pkg/uuid"
+import id "github.com/HideBa/notion-diary-auto/pkg/id"
 
 type User struct {
-	id       string
+	id       id.ID
 	username string
 }
 
 func NewUser(username string) *User {
-	id := uuid.GetUUID()
+	id := id.NewID()
 	return NewUserWithId(id, username)
 }
 
-func NewUserWithId(id string, username string) *User {
+func NewUserWithId(id id.ID, username string) *User {
 	return &User{
 		id:       id,
 		username: username,
 	}
 }
 
-func UpdateUser(id string, username string) *User {
+func UpdateUser(id id.ID, username string) *User {
 	return &User{
 		id:       id,
 		username: username,
 	}
 }
 
-func (u *User) ID() string {
+func (u *User) ID() id.ID {
 	return u.id
 }
 

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 
 	"github.com/HideBa/notion-diary-auto/domain"
+	"github.com/HideBa/notion-diary-auto/pkg/id"
+	"github.com/google/uuid"
 )
 
 type UserRepo struct {
@@ -17,20 +19,20 @@ func NewUserRepo(db *sql.DB) domain.UserRepository {
 }
 
 type UserRepoModel struct {
-	id       string
+	id       id.ID
 	username string
 }
 
-func (ur *UserRepo) GetByID(id string) (*domain.User, error) {
+func (ur *UserRepo) GetByID(id1 id.ID) (*domain.User, error) {
 	var (
-		id2      string
+		uid      uuid.UUID
 		username string
 	)
-	if err := ur.db.QueryRow("select * from users where id = ? LIMIT 1", id).Scan(&id2, &username); err != nil {
+	if err := ur.db.QueryRow("select * from users where id = ? LIMIT 1", id1.GetID()).Scan(&uid, &username); err != nil {
 		return nil, err
 	}
 	um := &UserRepoModel{
-		id:       id2,
+		id:       id.FromIDUUID(uid),
 		username: username,
 	}
 	return toUserModel(um), nil
@@ -42,7 +44,7 @@ func (ur *UserRepo) Create(u *domain.User) (*domain.User, error) {
 func (ur *UserRepo) Update(u *domain.User) error {
 	return nil
 }
-func (ur *UserRepo) Delete(id string) error {
+func (ur *UserRepo) Delete(id id.ID) error {
 	return nil
 }
 

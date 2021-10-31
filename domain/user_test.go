@@ -3,26 +3,29 @@ package domain
 import (
 	"testing"
 
+	id "github.com/HideBa/notion-diary-auto/pkg/id"
+	idPkg "github.com/HideBa/notion-diary-auto/pkg/id"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUser_ID(t *testing.T) {
+	id := idPkg.NewID()
 	type fields struct {
-		id       string
+		id       idPkg.ID
 		username string
 	}
 	tests := []struct {
 		name   string
 		fields fields
-		want   string
+		want   idPkg.ID
 	}{
 		{
 			name: "should return name",
 			fields: fields{
-				id:       "id",
+				id:       id,
 				username: "username",
 			},
-			want: "id",
+			want: id,
 		},
 	}
 	for _, tt := range tests {
@@ -40,7 +43,7 @@ func TestUser_ID(t *testing.T) {
 
 func TestUser_Username(t *testing.T) {
 	type fields struct {
-		id       string
+		id       id.ID
 		username string
 	}
 	tests := []struct {
@@ -51,7 +54,7 @@ func TestUser_Username(t *testing.T) {
 		{
 			name: "should return username",
 			fields: fields{
-				id:       "id",
+				id:       id.NewID(),
 				username: "username",
 			},
 			want: "username",
@@ -72,7 +75,7 @@ func TestUser_Username(t *testing.T) {
 
 func TestUser_SetUsername(t *testing.T) {
 	type fields struct {
-		id       string
+		id       id.ID
 		username string
 	}
 	type args struct {
@@ -87,7 +90,7 @@ func TestUser_SetUsername(t *testing.T) {
 		{
 			name: "should change username correctly",
 			fields: fields{
-				id:       "id",
+				id:       id.NewID(),
 				username: "username",
 			},
 			args: args{

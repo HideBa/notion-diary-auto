@@ -1,6 +1,9 @@
 package usecase
 
-import "github.com/HideBa/notion-diary-auto/domain"
+import (
+	"github.com/HideBa/notion-diary-auto/domain"
+	"github.com/HideBa/notion-diary-auto/pkg/id"
+)
 
 type IUser interface {
 	FetchAll() (*GetUsersResponse, error)
@@ -16,12 +19,12 @@ type CreateUserRequest struct {
 }
 
 type CreateUserResponse struct {
-	Id       string
+	Id       id.ID
 	Username string
 }
 
 type UpdateUserRequest struct {
-	Id       string
+	Id       id.ID
 	Username string
 }
 
@@ -29,7 +32,7 @@ type UpdateUserResponse struct {
 }
 
 type DeleteUserRequest struct {
-	Id string
+	Id id.ID
 }
 
 type DeleteUserResponse struct {
