@@ -17,12 +17,17 @@ import (
 func NewEcho(config *Config) {
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
+	//migration
+	if err := database.Migrate(config.DB.Url); err != nil {
+		panic("fail to connect with DB")
+	}
 
 	ngw := notion.NewNotionDiary(&config.Notion)
 	wgw := weather.NewWeather(&config.Weather)
 	nsgw := news.NewNews(&config.News)
 	cgw := calendar.NewCalendar(&config.Calendar)
 	repo := database.NewRepository(database.NewDB(config.DB.Url))
+
 	uc := interactor.NewInteractor(&ngw, &wgw, &nsgw, &cgw, &repo.User)
 	internalCon := controller.NewInternalController(uc)
 	outerCon := controller.NewOuterController((*controller.NotionRawConfig)(&config.Notion))

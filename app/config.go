@@ -24,7 +24,7 @@ type Config struct {
 type DBConfig struct {
 	Name string
 	User string
-	Url  string `envconfig:"DB_URL"`
+	Url  string `envconfig:"URL"`
 	Pass string
 }
 

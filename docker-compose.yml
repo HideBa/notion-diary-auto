@@ -11,7 +11,7 @@
         POSTGRES_DB: dation-db
         POSTGRES_USER: user
         POSTGRES_PASSWORD: password
-        PGDATA: /PGDATA
+        PGDATA: /pgdata
       ports:
         - 5432:5432
       tty: true
@@ -25,9 +25,9 @@
       volumes:
         - ./:/go/src/app
       environment:
-        DB_URL: postgres://user:password@db/dation-db
-        SERVER_PORT: 8080
-        SECRET_KEY: example
+        DATION_DB_URL: postgres://user:password@db:5432/dation-db?sslmode=disable
+        DATION_APPPORT: 8080
+        ATION_APP_SECRET: example
       ports:
         - 8080:8080
       depends_on:
