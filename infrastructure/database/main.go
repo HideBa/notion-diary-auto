@@ -6,17 +6,25 @@ import (
 
 	"github.com/HideBa/notion-diary-auto/domain"
 	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func Migrate(dbUrl string) error {
-	m, err := migrate.New("file://infrastructure/database/migrations", dbUrl)
+func Migrate(driver database.Driver, migrateVer uint) error {
+	m, err := migrate.NewWithDatabaseInstance("file://infrastructure/database/migrations", "postgres", driver)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := m.Up(); err != nil {
-		log.Fatal(err)
+	migrateV, dirty, err := m.Version()
+	if dirty {
+		log.Fatal("DB is dirty")
+	}
+	if migrateV != migrateVer || err != nil {
+		if err := m.Migrate(migrateVer); err != nil {
+			log.Fatal(err)
+		}
+		return nil
 	}
 	return nil
 }

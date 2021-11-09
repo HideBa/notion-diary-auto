@@ -22,16 +22,19 @@ type Config struct {
 	DebugMode bool
 }
 type DBConfig struct {
-	Name string
-	User string
-	Url  string `envconfig:"URL"`
-	Pass string
+	Name         string
+	User         string
+	Url          string `envconfig:"URL"`
+	Pass         string
+	MigrationVer uint
 }
 
 type AppConfig struct {
 	Port   string `envconfig:"PORT"`
 	Secret string
 }
+
+const DATABASE_MIGRATION_VERSION uint = 1
 
 func NewConfig() (*Config, error) {
 	err := godotenv.Load(".env")
@@ -46,6 +49,7 @@ func NewConfig() (*Config, error) {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	c.DB.MigrationVer = DATABASE_MIGRATION_VERSION
 	dationEnv := os.Getenv("DATION_ENV")
 	if dationEnv != "production" {
 		c.DebugMode = true

@@ -9,6 +9,7 @@ import (
 	"github.com/HideBa/notion-diary-auto/infrastructure/router"
 	"github.com/HideBa/notion-diary-auto/infrastructure/weather"
 	"github.com/HideBa/notion-diary-auto/interactor"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -17,8 +18,14 @@ import (
 func NewEcho(config *Config) {
 	e := echo.New()
 	e.Logger.SetLevel(log.DEBUG)
+
+	db := database.NewDB(config.DB.Url)
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		log.Fatal("fail to create db instance")
+	}
 	//migration
-	if err := database.Migrate(config.DB.Url); err != nil {
+	if err := database.Migrate(driver, config.DB.MigrationVer); err != nil {
 		panic("fail to connect with DB")
 	}
 

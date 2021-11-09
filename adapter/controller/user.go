@@ -41,6 +41,9 @@ func (uc *UserController) Create(c echo.Context) error {
 }
 
 func (uc *UserController) FetchAll(c echo.Context) error {
-	uc.interactor.FetchAll()
-	return c.JSON(200, "users")
+	userRes, err := uc.interactor.FetchAll()
+	if err != nil {
+		return c.JSON(500, "internal server error")
+	}
+	return c.JSON(200, userRes)
 }

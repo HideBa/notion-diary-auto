@@ -12,12 +12,15 @@ func Api(r *echo.Group, c *controller.Controller, oc *controller.OuterController
 	r.POST("/test", func(c echo.Context) error {
 		return c.JSON(200, "test")
 	})
+
+	// ***Diary***
 	r.GET("/diaries", c.DiaryController.Fetch)
 	r.POST("/diaries", c.DiaryController.Create)
+
+	// ***Notion***
 	r.POST("/notion/authorize", oc.OAuth.Notion.GetAuthCode)
 	r.GET("/notion/callback", oc.OAuth.Notion.GetToken)
 
 	// ***User***
-	ug := r.Group("users")
-	ug.GET("/", c.UserController.FetchAll)
+	r.GET("/users", c.UserController.FetchAll)
 }

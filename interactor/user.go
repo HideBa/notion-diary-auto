@@ -16,7 +16,16 @@ func NewUser(repo *domain.UserRepository) usecase.IUser {
 }
 
 func (u *User) FetchAll() (*usecase.GetUsersResponse, error) {
-	return nil, nil
+	domainUsers, err := u.UserRepository.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	users := []usecase.UserResponse{}
+	for _, u := range domainUsers {
+		user := DomainUserToUserResponse(&u)
+		users = append(users, *user)
+	}
+	return &usecase.GetUsersResponse{Users: users}, nil
 }
 
 func (u *User) Create(req *usecase.CreateUserRequest) (res *usecase.CreateUserResponse, err error) {
@@ -49,4 +58,10 @@ func (u *User) Delete(req *usecase.DeleteUserRequest) (*usecase.DeleteUserRespon
 		return nil, err
 	}
 	return nil, nil
+}
+
+func DomainUserToUserResponse(u *domain.User) *usecase.UserResponse {
+	return &usecase.UserResponse{
+		Username: u.Username(),
+	}
 }

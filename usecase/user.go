@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"github.com/HideBa/notion-diary-auto/domain"
 	"github.com/HideBa/notion-diary-auto/pkg/id"
 )
 
@@ -12,7 +11,11 @@ type IUser interface {
 	Delete(req *DeleteUserRequest) (*DeleteUserResponse, error)
 }
 type GetUsersResponse struct {
-	users []domain.User //TODO: change here
+	Users []UserResponse //TODO: change here
+}
+
+type UserResponse struct {
+	Username string `json:"username"`
 }
 type CreateUserRequest struct {
 	Username string
