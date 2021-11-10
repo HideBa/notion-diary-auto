@@ -7,6 +7,7 @@ require (
 	cloud.google.com/go/firestore v1.6.0 // indirect
 	cloud.google.com/go/storage v1.16.1 // indirect
 	contrib.go.opencensus.io/exporter/stackdriver v0.6.0 // indirect
+	firebase.google.com/go v3.13.0+incompatible // indirect
 	firebase.google.com/go/v4 v4.6.0 // indirect
 	git.apache.org/thrift.git v0.0.0-20180924222215-a9235805469b // indirect
 	github.com/cockroachdb/cockroach-go v0.0.0-20181001143604-e0a95dfd547c // indirect

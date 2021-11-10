@@ -20,6 +20,7 @@ pgdata
 tmp
 
 dation**.json
+credential.json
 
 # debug
 __debug**
