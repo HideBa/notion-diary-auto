@@ -53,6 +53,7 @@ func NewEcho(config *Config) {
 		AllowHeaders: []string{"*"},
 		AllowMethods: []string{"GET", "POST", "OPTIONS"},
 	}))
+	e.Use(JWTMiddleware())
 
 	e.Logger.Fatal(e.Start(":" + (config.App.Port)))
 }
