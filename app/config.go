@@ -18,6 +18,7 @@ type Config struct {
 	Notion    notion.NotionRawConfig
 	Weather   weather.WeatherConfig
 	News      news.NewsConfig
+	Auth      AuthConfig
 	Calendar  calendar.GoogleCalendarConfig `envconfig:"GOOGLE"`
 	DebugMode bool
 }
